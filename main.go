@@ -127,12 +127,12 @@ func main() {
 		median, er := calc_median(numbers)
 		mode, err := calc_mode(numbers)
 
-		if e != nil && er != nil && err != nil {
+		if e != nil || er != nil || err != nil {
 			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "not a number"})
 		} else {
 			c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "all", "mean": mean, "median": median, "mode": mode})
 		}
 	})
 
-	r.Run()
+	r.Run(":5000")
 }
