@@ -55,6 +55,32 @@ func calc_median(numbers []string) (float64, error) {
 
 }
 
+func calc_mode(numbers []string) (mode int, err error) {
+	// converted := []int{}
+	joined := strings.Join(numbers, "")
+	count_map := make(map[string]int)
+	for _, n := range numbers {
+		count := strings.Count(joined, n)
+		count_map[n] = count
+	}
+
+	max := 0
+	for _, key := range numbers {
+		freq := count_map[key]
+		num, err := strconv.Atoi(key)
+		if err != nil {
+			return 0, err
+		}
+
+		if freq > max {
+			mode = num
+			max = freq
+		}
+	}
+
+	return
+}
+
 func main() {
 	r := gin.Default()
 
@@ -82,6 +108,30 @@ func main() {
 			c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "median", "value": median})
 		}
 
+	})
+
+	r.GET("/mode/:nums", func(c *gin.Context) {
+		numbers := strings.Split(c.Param("nums"), ",")
+		mode, err := calc_mode(numbers)
+
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "not a number"})
+		} else {
+			c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "mode", "value": mode})
+		}
+	})
+
+	r.GET("/all/:nums", func(c *gin.Context) {
+		numbers := strings.Split(c.Param("nums"), ",")
+		mean, e := calc_mean(numbers)
+		median, er := calc_median(numbers)
+		mode, err := calc_mode(numbers)
+
+		if e != nil && er != nil && err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "not a number"})
+		} else {
+			c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "all", "mean": mean, "median": median, "mode": mode})
+		}
 	})
 
 	r.Run()
