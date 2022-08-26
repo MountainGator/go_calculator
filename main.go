@@ -65,9 +65,10 @@ func main() {
 
 		if err != nil {
 			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "not a number"})
+		} else {
+			c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "mean", "value": mean})
 		}
 
-		c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "mean", "value": mean})
 	})
 
 	r.GET("/median/:nums", func(c *gin.Context) {
@@ -77,9 +78,10 @@ func main() {
 
 		if err != nil {
 			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "not a number"})
+		} else {
+			c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "median", "value": median})
 		}
 
-		c.IndentedJSON(http.StatusAccepted, gin.H{"operation": "median", "value": median})
 	})
 
 	r.Run()
