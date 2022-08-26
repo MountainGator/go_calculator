@@ -25,8 +25,8 @@ func calc_mean(numbers []string) (float64, error) {
 	return mean, nil
 }
 
-func calc_median(numbers []string) (int, error) {
-	var median int
+func calc_median(numbers []string) (float64, error) {
+	var median float64
 	length := float64(len(numbers))
 	var sorted = []int{}
 
@@ -39,14 +39,17 @@ func calc_median(numbers []string) (int, error) {
 	}
 
 	sort.Ints(sorted)
+	if math.Mod(length, 2) == 0.000000 {
 
-	if int(length)%2 == 0 {
 		x := length / 2
-		median = sorted[int(x)]
+		x -= 1
+		median = float64(sorted[int(x)])
 		return median, nil
 	} else {
 		x := math.Ceil(length / 2)
-		median = sorted[int(x)]
+		x -= 1
+		y := x - 1
+		median = (float64(sorted[int(x)]) + float64(sorted[int(y)])) / 2
 		return median, nil
 	}
 
